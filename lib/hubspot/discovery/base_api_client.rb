@@ -64,8 +64,8 @@ module Hubspot
 
       def call_api_with_retry(api_method, params_to_pass, retry_config, &block)
         call_api_with_rescue(api_method, params_to_pass) do |error|
-          opts = retry_config.detect{ |k,v| k === error.code }&.last
-          retries = opts&.dig(:max_retries) || 5
+          opts = retry_config.detect{ |k,v| k === error.code }.last
+          retries = opts.dig(:max_retries) || 5
 
           block.call(error) unless block.nil?
 
@@ -80,7 +80,7 @@ module Hubspot
 
             return response unless response.respond_to?(:code)
 
-            opts = retry_config.detect{ |k,v| k === response.code }&.last
+            opts = retry_config.detect{ |k,v| k === response.code }.last
             retries -= 1
           end
 
